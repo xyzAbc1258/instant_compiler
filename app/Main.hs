@@ -9,7 +9,8 @@ import SkelInstant
 import PrintInstant
 import AbsInstant
 import ErrM
-import JVMCompiler
+import qualified JVMCompiler as JVM
+import qualified LLVMCompiler as LLVM
 
 type ParseFun a = [Token] -> Err a
 
@@ -39,7 +40,10 @@ showTree v tree
  = do
       putStrV v $ "\n[Abstract Syntax]\n\n" ++ show tree
       putStrV v $ "\n[Linearized tree]\n\n" ++ printTree tree
-      putStrLn $ compile "Sample" tree
+      putStrLn $ "-------------- JVM ------------"
+      putStrLn $ JVM.compile "Sample" tree
+      putStrLn $ "-------------- LLVM ------------"
+      putStrLn $ LLVM.compile tree
 
 main :: IO ()
 main = do args <- getArgs

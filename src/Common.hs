@@ -3,6 +3,7 @@ module Common(
   gwrite,
   getNum,
   runGen,
+  emptyEnv,
   envFromList,
   newline,
   concatLines
