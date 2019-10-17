@@ -10,13 +10,13 @@ compile name p = let (stack, newP) = calcAndOptimizeStack p in
                    let localVars = calcLocals newP in
                     let instructionsM = generateInstructionsP newP in
                       let instructions = runGen instructionsM $ envFromList localVars in
-                        let fullPrefix = concatLines [prefix name, stackSize stack, localsSize $ length localVars] in
+                        let fullPrefix = concatLines [prefix name, stackSize stack, localsSize $ length localVars + 1] in
                           let content = concatLines $ map show instructions in
                             concatLines [fullPrefix, content, postfix]
 
 
 prefix::String -> String
-prefix name = let s = ".super java/lang/Object\
+prefix name = let s = ".super java/lang/Object\n\
                       \.method public <init>()V\n\
                       \   aload_0\n\
                       \   invokespecial java/lang/Object/<init>()V\n\
@@ -33,7 +33,7 @@ localsSize::Int -> String
 localsSize s = ".limit locals " ++ show s
 
 postfix::String
-postfix = ".end method"
+postfix = "return\n.end method"
 
 calcLocals::Program -> [String]
 calcLocals (Prog stmts) =
@@ -81,7 +81,7 @@ generateInstructionsP (Prog s) = mapM_ generateInstructionsS s
 generateInstructionsS::Stmt -> Generator Instruction ()
 generateInstructionsS (SAss (Ident i) e) = do
   generateInstructionsE e
-  num <- getNum i
+  num <- getVal i
   gwrite $ Store num
 
 generateInstructionsS (SExp e) = do
@@ -94,7 +94,7 @@ generateInstructionsE (ExpSub e1 e2) = generateBinary e1 e2 Sub
 generateInstructionsE (ExpMul e1 e2) = generateBinary e1 e2 Mul
 generateInstructionsE (ExpDiv e1 e2) = generateBinary e1 e2 Div
 generateInstructionsE (ExpLit e) = gwrite $ Const $ fromInteger e
-generateInstructionsE (ExpVar (Ident e)) = getNum e >>= (gwrite . Load)
+generateInstructionsE (ExpVar (Ident e)) = getVal e >>= (gwrite . Load)
 
 generateBinary::Exp -> Exp -> Instruction -> Generator Instruction ()
 generateBinary e1 e2 i = do

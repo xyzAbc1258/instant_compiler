@@ -1,7 +1,8 @@
 module Common(
   Generator,
+  GeneralGenerator,
   gwrite,
-  getNum,
+  getVal,
   runGen,
   emptyEnv,
   envFromList,
@@ -14,23 +15,25 @@ import Control.Monad.State
 import qualified Data.Map as M
 import Data.Monoid
 
-type Env = M.Map String Int
-type Generator a = WriterT (Endo [a]) (State Env)
+type Env a = M.Map String a
+type GeneralGenerator s a = WriterT (Endo [a]) (State (Env s))
 
-runGen::Generator a b -> Env -> [a]
+type Generator a = GeneralGenerator Int a
+
+runGen::GeneralGenerator s a b -> Env s -> [a]
 runGen g e = appEndo (evalState (execWriterT g) e) []
 
-emptyEnv::Env
+emptyEnv::Env s
 emptyEnv = M.empty
 
-envFromList::[String] -> Env
+envFromList::[String] -> Env Int
 envFromList l = M.fromList $ zip l [1 .. (length l)]
 
-gwrite::a -> Generator a ()
+gwrite::a -> GeneralGenerator s a ()
 gwrite l = tell $ Endo ([l] ++)
 
-getNum::String -> Generator a Int
-getNum s = do
+getVal::String -> GeneralGenerator s a s
+getVal s = do
   st <- get
   let num = st M.! s
   return num

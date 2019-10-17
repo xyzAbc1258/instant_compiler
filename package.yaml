@@ -24,14 +24,15 @@ dependencies:
 - containers
 - mtl
 - array
+- filepath
 
 library:
   source-dirs: src
 
 executables:
-  instant-compiler-exe:
-    main:                Main.hs
-    source-dirs:         app
+  insc_jvm:
+    main: Main.hs
+    source-dirs: insc_jvm
     ghc-options:
     - -threaded
     - -rtsopts
@@ -39,13 +40,13 @@ executables:
     dependencies:
     - instant-compiler
 
-tests:
-  instant-compiler-test:
-    main:                Spec.hs
-    source-dirs:         test
+  insc_llvm:
+    main: Main.hs
+    source-dirs: insc_llvm
     ghc-options:
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
     - instant-compiler
+

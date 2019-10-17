@@ -3,8 +3,9 @@ module LLVMCommon(
   Instruction(Assign, Print),
   Op,
   LLVMIdent(LLVMIdent),
+  LLVMGenerator,
   addOp, subOp, mulOp, divOp, val,
-  getCurrent, getNext
+  getCurrent, getNext, updateValue
 ) where
 
 import Common
@@ -12,7 +13,9 @@ import Control.Monad.State
 import GHC.Base
 import qualified Data.Map as M
 
-data LLVMIdent = LLVMIdent String
+type LLVMGenerator a = GeneralGenerator Value a
+
+data LLVMIdent = LLVMIdent String Int
 
 data Value = Const Int | Var LLVMIdent
 data OpType = Add | Sub | Mul | Div
@@ -26,7 +29,7 @@ divOp = Op Div
 val = Val
 
 instance Show LLVMIdent where
-  show(LLVMIdent i) = "%" ++ i
+  show(LLVMIdent i v) = "%" ++ i ++ "_" ++ show v
 
 instance Show Value where
   show (Const i) = show i
@@ -44,14 +47,20 @@ instance Show Op where
 
 instance Show Instruction where
   show (Assign i o) = show i ++ " = " ++ show o
-  show (Print i) = "call .... sth(i32 " ++ show i ++ ")"
+  show (Print i) = "call void @printInt(i32 " ++ show i ++ ")"
 
-getCurrent::String -> Generator a Value
-getCurrent a = do
-  n <- getNum a
-  return $ Var $ LLVMIdent $ a ++ "_" ++ show n
+getCurrent::String -> LLVMGenerator a Value
+getCurrent = getVal
 
-getNext::String -> Generator a LLVMIdent
+nextIdent::String -> Value -> Value
+nextIdent _ (Var (LLVMIdent n i)) = Var $ LLVMIdent n $ i +1
+nextIdent a (Const _) = Var $ LLVMIdent a 0
+
+getNext::String -> LLVMGenerator a LLVMIdent
 getNext a = do
-  modify (M.alter (\v -> fmap (+ 1) v <|> Just 0 ) a)
-  (\(Var a) -> a) <$> getCurrent a
+  current <- getVal a
+  modify (M.alter (\v -> fmap (nextIdent a) v <|> (Just $ Var $ LLVMIdent a 0) ) a)
+  (\(Var x) -> x) <$> getVal a
+
+updateValue::String -> Value -> LLVMGenerator a ()
+updateValue a v = modify(M.insert a v)

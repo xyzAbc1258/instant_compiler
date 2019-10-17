@@ -8,7 +8,7 @@
 .end method
 
 .method public static printInt(I)V
-.limit stack 1
+.limit stack 2
   getstatic  java/lang/System/out Ljava/io/PrintStream;
   iload_0
   invokevirtual  java/io/PrintStream/println(I)V

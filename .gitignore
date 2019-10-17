@@ -4,3 +4,4 @@ instant-compiler.cabal
 out
 .idea
 *.lock
+lib/*.class
