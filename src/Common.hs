@@ -33,10 +33,7 @@ gwrite::a -> GeneralGenerator s a ()
 gwrite l = tell $ Endo ([l] ++)
 
 getVal::String -> GeneralGenerator s a s
-getVal s = do
-  st <- get
-  let num = st M.! s
-  return num
+getVal s = gets (M.! s)
 
 newline::String
 newline = "\n"

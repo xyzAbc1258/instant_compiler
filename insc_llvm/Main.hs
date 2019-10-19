@@ -12,6 +12,7 @@ import ErrM
 import qualified LLVMCompiler as LLVM
 import System.Exit
 import System.FilePath
+import System.Process
 
 type ParseFun a = [Token] -> Err a
 
@@ -23,18 +24,27 @@ run p s f = let ts = myLexer s in case p ts of
            Bad err    -> do putStrLn "\nERROR\n"
                             putStrLn err
                             exitWith $ ExitFailure 1
-           Ok  tree -> compileAndSaveTree f tree
+           Ok  tree -> do
+                        savedFile <- compileAndSaveTree f tree
+                        compile savedFile
 
 
 
 
-compileAndSaveTree :: String -> Program -> IO ()
+
+compileAndSaveTree :: String -> Program -> IO String
 compileAndSaveTree s tree
  = do
       let llvm = LLVM.compile tree
       let f = dropExtension s
       let llFile = addExtension f "ll"
       writeFile llFile llvm
+      return llFile
+
+compile::String -> IO()
+compile file = do
+  let cmd = " llvm-as " ++ file
+  callCommand cmd
 
 main :: IO ()
 main = do args <- getArgs

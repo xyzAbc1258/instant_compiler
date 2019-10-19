@@ -14,7 +14,13 @@ compile p =  let instructionsM = generateInstructionsP p in
 
 
 prefix::String
-prefix = "declare void @printInt(i32)\n\
+prefix = "@dnl = internal constant [4 x i8] c\"%d\\0A\\00\"\n\
+          \declare i32 @printf(i8*, ...)\n\
+          \define void @printInt(i32 %x) {\n\
+          \        %t0 = getelementptr [4 x i8], [4 x i8]* @dnl, i32 0, i32 0\n\
+          \        call i32 (i8*, ...) @printf(i8* %t0, i32 %x)\n\
+          \        ret void\n\
+          \}\n\
           \define i32 @main() {"
 
 postfix::String

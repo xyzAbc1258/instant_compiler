@@ -52,15 +52,18 @@ instance Show Instruction where
 getCurrent::String -> LLVMGenerator a Value
 getCurrent = getVal
 
+firstIdent::String -> Value
+firstIdent a = Var $ LLVMIdent a 0
+
 nextIdent::String -> Value -> Value
 nextIdent _ (Var (LLVMIdent n i)) = Var $ LLVMIdent n $ i +1
-nextIdent a (Const _) = Var $ LLVMIdent a 0
+nextIdent a (Const _) = firstIdent a
 
 getNext::String -> LLVMGenerator a LLVMIdent
 getNext a = do
   current <- getVal a
-  modify (M.alter (\v -> fmap (nextIdent a) v <|> (Just $ Var $ LLVMIdent a 0) ) a)
-  (\(Var x) -> x) <$> getVal a
+  modify (M.alter (\v -> fmap (nextIdent a) v <|> (Just $ firstIdent a) ) a)
+  getVal a >>= (\(Var x) -> return x)
 
 updateValue::String -> Value -> LLVMGenerator a ()
 updateValue a v = modify(M.insert a v)

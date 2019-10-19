@@ -81,8 +81,7 @@ generateInstructionsP (Prog s) = mapM_ generateInstructionsS s
 generateInstructionsS::Stmt -> Generator Instruction ()
 generateInstructionsS (SAss (Ident i) e) = do
   generateInstructionsE e
-  num <- getVal i
-  gwrite $ Store num
+  getVal i >>= (gwrite . Store)
 
 generateInstructionsS (SExp e) = do
   generateInstructionsE e
@@ -93,7 +92,7 @@ generateInstructionsE (ExpAdd e1 e2) = generateBinary e1 e2 Add
 generateInstructionsE (ExpSub e1 e2) = generateBinary e1 e2 Sub
 generateInstructionsE (ExpMul e1 e2) = generateBinary e1 e2 Mul
 generateInstructionsE (ExpDiv e1 e2) = generateBinary e1 e2 Div
-generateInstructionsE (ExpLit e) = gwrite $ Const $ fromInteger e
+generateInstructionsE (ExpLit e) = (gwrite . Const . fromInteger) e
 generateInstructionsE (ExpVar (Ident e)) = getVal e >>= (gwrite . Load)
 
 generateBinary::Exp -> Exp -> Instruction -> Generator Instruction ()

@@ -5,3 +5,5 @@ out
 .idea
 *.lock
 lib/*.class
+*.exe
+smaple
