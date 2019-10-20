@@ -1,0 +1,87 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.31.2.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: cccf6670065db341479716db26f017c3d6029926ce16a3833532d1f08b8bca34
+
+name:           instant-compiler
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/Github username here/instant-compiler#readme>
+homepage:       https://github.com/Github username here/instant-compiler#readme
+bug-reports:    https://github.com/Github username here/instant-compiler/issues
+author:         Author name here
+maintainer:     Author email here
+copyright:      2019 Author name here
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    ChangeLog.md
+
+source-repository head
+  type: git
+  location: https://github.com/Github username here/instant-compiler
+
+library
+  exposed-modules:
+      AbsInstant
+      Common
+      ErrM
+      JVMCommon
+      JVMCompiler
+      LexInstant
+      Lib
+      LLVMCommon
+      LLVMCompiler
+      ParInstant
+      PrintInstant
+      SkelInstant
+  other-modules:
+      Paths_instant_compiler
+  hs-source-dirs:
+      src
+  build-depends:
+      array
+    , base >=4.7 && <5
+    , containers
+    , filepath
+    , mtl
+    , process
+  default-language: Haskell2010
+
+executable insc_jvm
+  main-is: Main.hs
+  other-modules:
+      Paths_instant_compiler
+  hs-source-dirs:
+      insc_jvm
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      array
+    , base >=4.7 && <5
+    , containers
+    , filepath
+    , instant-compiler
+    , mtl
+    , process
+  default-language: Haskell2010
+
+executable insc_llvm
+  main-is: Main.hs
+  other-modules:
+      Paths_instant_compiler
+  hs-source-dirs:
+      insc_llvm
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      array
+    , base >=4.7 && <5
+    , containers
+    , filepath
+    , instant-compiler
+    , mtl
+    , process
+  default-language: Haskell2010

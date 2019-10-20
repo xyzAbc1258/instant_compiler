@@ -1,5 +1,4 @@
 .stack-work/
-instant-compiler.cabal
 *~
 out
 .idea

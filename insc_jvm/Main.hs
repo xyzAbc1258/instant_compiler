@@ -1,8 +1,6 @@
 module Main where
 
 import System.IO ( stdin, hGetContents )
-import System.Environment ( getArgs, getProgName )
-
 import LexInstant
 import ParInstant
 import SkelInstant
