@@ -11,7 +11,8 @@ instance Show Instruction where
   show (Const 3) = "iconst_3"
   show (Const 4) = "iconst_4"
   show (Const (-1)) = "iconst_m1"
-  show (Const n) = "bipush " ++ show n
+  show (Const n) | n >= -128 && n <= 127 = "bipush " ++ show n
+  show (Const n) = "sipush " ++ show n
 
   show (Store 0) = "istore_0"
   show (Store 1) = "istore_1"
