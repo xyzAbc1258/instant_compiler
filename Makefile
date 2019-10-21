@@ -4,11 +4,11 @@ runtimelib:
     java -jar ./lib/jasmin.jar ./lib/Runtime.j -d ./lib
 
 build_all:
-    cabal configure
-    cabal build
+    cabal v2-configure
+    cabal v2-build
 
 insc_jvm: build_all
-    cp ..
+    cabal v2-install exe:insc_jvm --install-method=copy --installdir=.
 
 insc_llvm: build_all
-    cp ..
+    cabal v2-install exe:insc_llvm --install-method=copy --installdir=.

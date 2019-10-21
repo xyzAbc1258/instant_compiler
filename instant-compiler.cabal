@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: cccf6670065db341479716db26f017c3d6029926ce16a3833532d1f08b8bca34
+-- hash: c7f83706c30b85e69a57293101a69c4f6e1b7da2758a3f56c0b4118cb1bc07ae
 
 name:           instant-compiler
 version:        0.1.0.0
@@ -57,7 +57,7 @@ executable insc_jvm
   other-modules:
       Paths_instant_compiler
   hs-source-dirs:
-      insc_jvm
+      insc_jvm_c
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       array
@@ -74,7 +74,7 @@ executable insc_llvm
   other-modules:
       Paths_instant_compiler
   hs-source-dirs:
-      insc_llvm
+      insc_llvm_c
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       array

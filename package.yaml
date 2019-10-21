@@ -33,7 +33,7 @@ library:
 executables:
   insc_jvm:
     main: Main.hs
-    source-dirs: insc_jvm
+    source-dirs: insc_jvm_c
     ghc-options:
     - -threaded
     - -rtsopts
@@ -43,7 +43,7 @@ executables:
 
   insc_llvm:
     main: Main.hs
-    source-dirs: insc_llvm
+    source-dirs: insc_llvm_c
     ghc-options:
     - -threaded
     - -rtsopts
