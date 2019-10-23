@@ -17,7 +17,7 @@ import System.Process
 type ParseFun a = [Token] -> Err a
 
 runFile :: ParseFun Program -> FilePath -> IO ()
-runFile p f = putStrLn f >> readFile f >>= (\c -> run p c f)
+runFile p f = readFile f >>= (\c -> run p c f)
 
 run :: ParseFun Program -> String -> String -> IO ()
 run p s f = let ts = myLexer s in case p ts of
@@ -27,9 +27,6 @@ run p s f = let ts = myLexer s in case p ts of
            Ok  tree -> do
                         savedFile <- compileAndSaveTree f tree
                         compile savedFile
-
-
-
 
 
 compileAndSaveTree :: String -> Program -> IO String

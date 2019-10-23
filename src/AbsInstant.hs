@@ -20,5 +20,7 @@ data Exp =
  | ExpDiv Exp Exp
  | ExpLit Integer
  | ExpVar Ident
+ | ExpSubInv Exp Exp -- Internal usage
+ | ExpDivInv Exp Exp -- Internal usage
   deriving (Eq,Ord,Show)
 

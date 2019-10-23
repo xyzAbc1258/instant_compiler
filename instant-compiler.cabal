@@ -58,7 +58,7 @@ executable insc_jvm
       Paths_instant_compiler
   hs-source-dirs:
       insc_jvm_c
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -threaded -rtsopts
   build-depends:
       array
     , base >=4.7 && <5
@@ -75,7 +75,7 @@ executable insc_llvm
       Paths_instant_compiler
   hs-source-dirs:
       insc_llvm_c
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -threaded -rtsopts
   build-depends:
       array
     , base >=4.7 && <5

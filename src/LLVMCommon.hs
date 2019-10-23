@@ -39,7 +39,7 @@ instance Show OpType where
   show Add = "add"
   show Sub = "sub"
   show Mul = "mul"
-  show Div = "div"
+  show Div = "sdiv"
 
 instance Show Op where
   show(Op op v1 v2) = show op ++ " i32 " ++ show v1 ++ ", " ++ show v2

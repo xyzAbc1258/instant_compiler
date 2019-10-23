@@ -1,8 +1,8 @@
 module JVMCommon(
-  Instruction(Const, Store, Load, Add, Mul, Sub, Div, Print)
+  Instruction(Const, Store, Load, Add, Mul, Sub, Div, Print, Swap)
 ) where
 
-data Instruction = Const Int | Store Int | Load Int | Add | Mul | Sub | Div | Print
+data Instruction = Const Int | Store Int | Load Int | Add | Mul | Sub | Div | Print | Swap
 
 instance Show Instruction where
   show (Const 0) = "iconst_0"
@@ -32,3 +32,5 @@ instance Show Instruction where
   show Div = "idiv"
 
   show Print = "invokestatic Runtime/printInt(I)V"
+
+  show Swap  = "swap"

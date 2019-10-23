@@ -68,12 +68,12 @@ calcAndOptimizeExp (ExpMul e1 e2) =
 calcAndOptimizeExp (ExpSub e1 e2) =
   let (h1, o1) = calcAndOptimizeExp e1 in
     let (h2, o2) = calcAndOptimizeExp e2 in
-      (max h1 (h2 + 1), ExpSub o1 o2)
+      if h2 > h1 then (h2, ExpSubInv o2 o1) else (max h1 (h2 + 1), ExpSub o1 o2)
 
 calcAndOptimizeExp (ExpDiv e1 e2) =
   let (h1, o1) = calcAndOptimizeExp e1 in
     let (h2, o2) = calcAndOptimizeExp e2 in
-      (max h1 (h2 + 1), ExpDiv o1 o2)
+      if h2 > h1 then (h2, ExpDivInv o2 o1) else (max h1 (h2 + 1), ExpDiv o1 o2)
 
 generateInstructionsP::Program -> Generator Instruction ()
 generateInstructionsP (Prog s) = mapM_ generateInstructionsS s
@@ -88,15 +88,17 @@ generateInstructionsS (SExp e) = do
   gwrite Print
 
 generateInstructionsE::Exp -> Generator Instruction ()
-generateInstructionsE (ExpAdd e1 e2) = generateBinary e1 e2 Add
-generateInstructionsE (ExpSub e1 e2) = generateBinary e1 e2 Sub
-generateInstructionsE (ExpMul e1 e2) = generateBinary e1 e2 Mul
-generateInstructionsE (ExpDiv e1 e2) = generateBinary e1 e2 Div
+generateInstructionsE (ExpAdd e1 e2) = generateBinary e1 e2 [Add]
+generateInstructionsE (ExpSub e1 e2) = generateBinary e1 e2 [Sub]
+generateInstructionsE (ExpSubInv e1 e2) = generateBinary e1 e2 [Swap, Sub]
+generateInstructionsE (ExpMul e1 e2) = generateBinary e1 e2 [Mul]
+generateInstructionsE (ExpDiv e1 e2) = generateBinary e1 e2 [Div]
+generateInstructionsE (ExpDivInv e1 e2) = generateBinary e1 e2 [Swap, Div]
 generateInstructionsE (ExpLit e) = (gwrite . Const . fromInteger) e
 generateInstructionsE (ExpVar (Ident e)) = getVal e >>= (gwrite . Load)
 
-generateBinary::Exp -> Exp -> Instruction -> Generator Instruction ()
+generateBinary::Exp -> Exp -> [Instruction] -> Generator Instruction ()
 generateBinary e1 e2 i = do
   generateInstructionsE e1
   generateInstructionsE e2
-  gwrite i
+  mapM_ gwrite i
